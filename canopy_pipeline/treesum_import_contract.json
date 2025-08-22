@@ -1,0 +1,112 @@
+{
+  "version": "3.0.0",
+  "source": "T-Cruise TreeSum",
+  "description": "Contract for importing T-Cruise TreeSum worksheets into Canopy internal schema.",
+  "required_columns": [
+    "TractName",
+    "StandID",
+    "StandAcres",
+    "CruiseDate",
+    "CruiseType",
+    "Size_BAF",
+    "PlotNum",
+    "PlotID",
+    "Species",
+    "DBH",
+    "MerchHt",
+    "TopDIB",
+    "TreeClass"
+  ],
+  "recommended_columns": [
+    "TractNo",
+    "PlotType",
+    "PlotSize",
+    "Grade",
+    "Form",
+    "Defect",
+    "SI",
+    "SI_BaseAge",
+    "SI_Species",
+    "SI_Trees",
+    "Cruiser"
+  ],
+  "column_types": {
+    "TractName": "string",
+    "TractNo": "string",
+    "StandID": "string",
+    "StandAcres": "number",
+    "CruiseDate": "date",
+    "CruiseType": "string",
+    "Size_BAF": "number",
+    "PlotNum": "integer",
+    "PlotID": "string",
+    "PlotType": "string",
+    "PlotSize": "number",
+    "Species": "string",
+    "DBH": "number",
+    "MerchHt": "number",
+    "TopDIB": "number",
+    "TreeClass": "string",
+    "Grade": "string",
+    "Form": "number",
+    "Defect": "number",
+    "SI": "number",
+    "SI_BaseAge": "integer",
+    "SI_Species": "string",
+    "SI_Trees": "integer",
+    "Cruiser": "string"
+  },
+  "normalization": {
+    "strip_whitespace": true,
+    "upper_species_codes": true,
+    "dates": {
+      "CruiseDate": "%Y-%m-%d"
+    },
+    "units": {
+      "DBH": "in",
+      "TopDIB": "in",
+      "MerchHt": "ft",
+      "StandAcres": "acres",
+      "PlotSize": "acres_or_ft2",
+      "Size_BAF": "ft2/acre_per_tree"
+    }
+  },
+  "mapping_to_canopy": {
+    "tract_id": "TractName",
+    "tract_code": "TractNo",
+    "stand_id": "StandID",
+    "acres": "StandAcres",
+    "cru_date": "CruiseDate",
+    "cru_type": "CruiseType",
+    "size_baf": "Size_BAF",
+    "plot_num": "PlotNum",
+    "plot_id": "PlotID",
+    "plot_type": "PlotType",
+    "plot_size": "PlotSize",
+    "species_code": "Species",
+    "dbh_in": "DBH",
+    "merch_height_ft": "MerchHt",
+    "top_dib_in": "TopDIB",
+    "tree_class": "TreeClass",
+    "grade": "Grade",
+    "form_class": "Form",
+    "defect_pct": "Defect",
+    "site_index_value_ft": "SI",
+    "site_index_base_age": "SI_BaseAge",
+    "si_species": "SI_Species",
+    "si_trees": "SI_Trees",
+    "cruiser": "Cruiser"
+  },
+  "constraints": [
+    "StandAcres > 0",
+    "DBH >= 1 and DBH <= 60",
+    "TopDIB <= DBH",
+    "0 <= Defect <= 100",
+    "CruiseType in ['Plot','Point']",
+    "Size_BAF > 0 for Point cruises; PlotSize > 0 for Plot cruises"
+  ],
+  "outputs": [
+    "treesum_normalized.csv",
+    "treesum_import_report.json"
+  ]
+}

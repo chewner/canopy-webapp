@@ -1,0 +1,70 @@
+
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <title>Canopy Cruise → Report</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <h1>Canopy Cruise → Report</h1>
+  <form action="{{ url_for('process') }}" method="post" enctype="multipart/form-data" class="card">
+    <label>TreeSum file (.xlsx / .xlsm / .csv)</label>
+    <input type="file" name="treesum" required>
+
+    <label>Prices (JSON)</label>
+    <input type="file" name="prices" required>
+
+    <label>Events CSV (optional)</label>
+    <input type="file" name="events">
+
+    <label>Calibration JSON (optional)</label>
+    <input type="file" name="calibration">
+
+    <div class="grid">
+      <div>
+        <label>Cruise Type</label>
+        <select name="cruise_type">
+          <option value="Plot">Plot (fixed-area)</option>
+          <option value="Point">Point (BAF prism)</option>
+        </select>
+      </div>
+      <div>
+        <label>Plot Size (ac) OR BAF</label>
+        <input type="text" name="size_value" value="0.1">
+      </div>
+    </div>
+
+    <div class="grid">
+      <div>
+        <label>Owner</label>
+        <input type="text" name="owner" value="Owner">
+      </div>
+      <div>
+        <label>Tract</label>
+        <input type="text" name="tract" value="Tract">
+      </div>
+      <div>
+        <label>Discount Rate (%)</label>
+        <input type="text" name="discount" value="5">
+      </div>
+      <div>
+        <label>Species Column (for calibration groups)</label>
+        <input type="text" name="species_col" value="CalSpecies">
+      </div>
+    </div>
+
+    <button type="submit">Generate Report</button>
+  </form>
+
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <div class="flash">
+        {% for m in messages %}<div>{{ m }}</div>{% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <footer>Canopy v3 • This tool runs your data locally on the server you deploy.</footer>
+</body>
+</html>

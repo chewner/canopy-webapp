@@ -1,0 +1,4 @@
+event,year,pulp_t,cns_t,saw_t,export_t
+first_thin,2027,1800,1150,500,0
+second_thin,2033,1400,1700,2600,900
+final,2040,1600,3800,9800,2200
