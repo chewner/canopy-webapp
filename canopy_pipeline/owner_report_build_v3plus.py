@@ -1,5 +1,10 @@
 
-import sys, json, pandas as pd, numpy as np, io, base64, math
+import sys, json, pandas as pd, numpy as np, numpy_financial as npf, io, base64, math
+    try:
+        irr = float(npf.irr(series)) * 100.0
+    except Exception:
+        irr = float("nan")
+
 import matplotlib.pyplot as plt
 from datetime import date, datetime
 
