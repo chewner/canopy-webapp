@@ -1,11 +1,31 @@
 
+from flask import Flask, render_template, request, redirect, url_for, send_from_directory, flash, jsonify
+from werkzeug.utils import secure_filename
+from flask_cors import CORS
 import os, uuid, json, tempfile, zipfile
 from datetime import datetime
-from flask import Flask, render_template, request, redirect, url_for, send_from_directory, flash
-from werkzeug.utils import secure_filename
 import pandas as pd
 import subprocess
 import sys
+
+# --- app init/config ---
+app = Flask(__name__)
+app.secret_key = os.environ.get("SECRET_KEY","dev-secret")
+app.config["MAX_CONTENT_LENGTH"] = 100 * 1024 * 1024  # 100 MB upload limit
+CORS(app, resources={r"/api/*": {"origins": ["https://app.canopy.yourdomain.com","http://localhost:3000"]}})
+
+# --- Simple bearer auth (zero new deps). Set this in Render env. ---
+API_TOKEN = os.environ.get("CANOPY_API_TOKEN")
+
+def require_token():
+    if not API_TOKEN:
+        return None  # no auth enforced if token not set
+    auth = request.headers.get("Authorization","")
+    if not auth.startswith("Bearer "):
+        return "Missing bearer token"
+    if auth.split(" ",1)[1] != API_TOKEN:
+        return "Invalid token"
+    return None
 
 # Paths
 ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -24,9 +44,6 @@ ALLOWED_EXTS = {"xlsx","xlsm","csv","json"}
 
 def allowed_file(filename):
     return "." in filename and filename.rsplit(".",1)[1].lower() in ALLOWED_EXTS
-
-app = Flask(__name__)
-app.secret_key = os.environ.get("SECRET_KEY","dev-secret")
 
 @app.route("/")
 def index():
